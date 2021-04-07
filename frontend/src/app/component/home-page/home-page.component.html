@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col-sm-12">
+    <form>
+      <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Source Paper</mat-label>
+          <mat-select [value]="sourcePaper">
+            <mat-option
+              [value]="p.id"
+              (onSelectionChange)="onPaperSelectedChanged($event, 1)"
+              *ngFor="let p of papers"
+              >{{ p.id }} {{ p.title }}</mat-option
+            >
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Target Paper</mat-label>
+          <mat-select [value]="targetPaper">
+            <mat-option
+              [value]="p.id"
+              (onSelectionChange)="onPaperSelectedChanged($event, 2)"
+              *ngFor="let p of papers"
+              >{{ p.id }} {{ p.title }}</mat-option
+            >
+          </mat-select>
+      </mat-form-field>
+    </form>
+    <p class="float-right" >
+      <button [disabled] ="sourcePaper == null || targetPaper == null"  mat-raised-button color="primary"(click)="comparePapers()">Compare</button>
+    </p>
+    <mat-progress-bar
+    [hidden]="hideSpinner"
+    mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div  style="height: 400px; overflow-y: auto;">
+          <h5 [hidden]="false">Source</h5>
+          <mat-progress-bar
+          [hidden]="hideSourceSpinner"
+          mode="indeterminate"
+          ></mat-progress-bar>
+
+          <mat-card  *ngFor="let p of sourceParagraphs ; let indexOfelement=index;" class="mb-2 {{p.isInSpotlight == true? 'isActive' : ''}}">                             
+              <p><span matBadge="{{indexOfelement+1}}" matBadgeOverlap="false"></span></p>
+              <p>{{p.sentence}}</p> 
+              <mat-card-actions>
+                <button [disabled]="!isInCompareMode" color="primary"(click)="compareParagraph(indexOfelement)" mat-button>Spotlight</button>
+              </mat-card-actions>
+          </mat-card>  
+        </div>        
+    </div>
+    <div class="col-sm-6">
+        <div>
+          <h5 [hidden]="false">Target</h5>
+          <mat-card  *ngFor="let p of targetParagraphsCopy ; let indexOfelement=index;" class="mb-2">    
+              <mat-accordion [hidden]="!isInCompareMode">
+                  <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <mat-progress-bar class="green-progress" mode="determinate" value="{{p.score}}"></mat-progress-bar>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <p>The explanation will go here for the features</p>
+                    </mat-expansion-panel>
+              </mat-accordion>                                      
+              <p><span matBadge="{{p.originalParagraphId? p.originalParagraphId +1: indexOfelement+1 }}" matBadgeOverlap="false"></span></p>
+              <p>{{p.score | number : '1.2-2'}}</p>
+              <p>{{p.sentence}}</p> 
+          </mat-card>
+        </div>         
+    </div>
+</div>
