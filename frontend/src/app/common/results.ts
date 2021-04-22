@@ -5,3 +5,7 @@ export class Result{
 export class ResultSet{
     results: Result[][]
 }
+
+export class ParagraphResult{
+    results: Result[]
+}

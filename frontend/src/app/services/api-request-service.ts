@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Paper, FetchPapersResponse, SinglePaperResponse } from '../common/paper';
 import { from, Observable, of } from 'rxjs';
 import * as usersData from '../common/results.json';
-import { Result, ResultSet } from '../common/results';
+import { ParagraphResult, Result, ResultSet } from '../common/results';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class ApiResquestService {
     return this.httpClient.get<ResultSet>(`${this.baseUrl}compare?source=${source}&target=${target}`);
   }
 
-  getResultsPerParagraph(source :string, target: string, paragraphId: string):Observable<Result[]>{
-    return this.httpClient.get<Result[]>(`${this.baseUrl}compare?source=${source}&target=${target}`);
+  getResultsPerParagraph(source :string, target: string, paragraphId: string):Observable<ParagraphResult>{
+    return this.httpClient.get<ParagraphResult>(`${this.baseUrl}compare_paragraph?source=${source}&target=${target}&source_paragraph_id=${paragraphId}`);
   }
 }

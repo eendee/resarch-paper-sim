@@ -5,7 +5,7 @@
           <mat-label>Source Paper</mat-label>
           <mat-select [value]="sourcePaper">
             <mat-option
-              [value]="p.id"
+              [value]="p"
               (onSelectionChange)="onPaperSelectedChanged($event, 1)"
               *ngFor="let p of papers"
               >{{ p.id }} {{ p.title }}</mat-option
@@ -17,7 +17,7 @@
           <mat-label>Target Paper</mat-label>
           <mat-select [value]="targetPaper">
             <mat-option
-              [value]="p.id"
+              [value]="p"
               (onSelectionChange)="onPaperSelectedChanged($event, 2)"
               *ngFor="let p of papers"
               >{{ p.id }} {{ p.title }}</mat-option
@@ -37,7 +37,7 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <div  style="height: 400px; overflow-y: auto;">
+        <div  style="height: 500px; overflow-y: auto;">
           <h5 [hidden]="false">Source</h5>
           <mat-progress-bar
           [hidden]="hideSourceSpinner"
@@ -48,7 +48,7 @@
               <p><span matBadge="{{indexOfelement+1}}" matBadgeOverlap="false"></span></p>
               <p>{{p.sentence}}</p> 
               <mat-card-actions>
-                <button [disabled]="!isInCompareMode" color="primary"(click)="compareParagraph(indexOfelement)" mat-button>Spotlight</button>
+                <button [disabled]="targetParagraphsCopy == undefined || targetParagraphsCopy.length == 0" color="primary"(click)="getParagraphResult(indexOfelement)" mat-button>Spotlight</button>
               </mat-card-actions>
           </mat-card>  
         </div>        

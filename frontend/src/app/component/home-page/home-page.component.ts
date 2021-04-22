@@ -14,7 +14,9 @@ export class HomePageComponent implements OnInit {
   papers: Paper[];
   sourcePaper:Paper;
   sourceParagraphs: ParagraphString[];
+
   comparisonResults : Result[][];
+  paragraphComparisonResults : Result[];
 
   targetPaper:Paper;
   targetParagraphs: ParagraphString[];
@@ -46,7 +48,7 @@ export class HomePageComponent implements OnInit {
         this.hideTargetSpinner = false;
         this.targetPaper = event.source.value;
       }
-      this.apiService.getReseachPaperById(event.source.value).subscribe(
+      this.apiService.getReseachPaperById(event.source.value.id).subscribe(
         (data)=>{
           if(input == 1){
             this.sourceParagraphs = data.dataset;
@@ -100,6 +102,33 @@ export class HomePageComponent implements OnInit {
         this.hideSpinner = true;        
         this.isInCompareMode = true;
         this.showResults();
+      },
+      (error)=>{
+        console.log(error)
+      }
+    )
+  }
+
+  getParagraphResult(sourceParagraphId = 0){
+    this.hideSpinner = false;
+    this.apiService.getResultsPerParagraph(this.sourcePaper.id, this.targetPaper.id, sourceParagraphId.toString() ).subscribe(
+      (data)=>{
+        this.paragraphComparisonResults = data.results;
+        
+        console.log(data);
+        console.log(this.paragraphComparisonResults);
+        console.log(this.targetParagraphsCopy);
+
+        this.hideSpinner = true;        
+        this.isInCompareMode = true;
+        let counter = 0;
+        this.targetParagraphsCopy =  JSON.parse(JSON.stringify(this.targetParagraphs));
+        this.targetParagraphsCopy.forEach((x)=>{
+            x.score = parseFloat( this.paragraphComparisonResults[counter].avg_max_score ) * 100;
+            x.originalParagraphId = counter;
+            counter ++;
+        })
+        this.targetParagraphsCopy.sort((x,y)=>y.score - x.score)
       },
       (error)=>{
         console.log(error)
