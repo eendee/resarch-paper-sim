@@ -9,7 +9,8 @@ Original file is located at
 
 import pickle
 import gensim
-from scipy.spatial import distance
+from numpy import dot
+from numpy.linalg import norm
 dictionary = gensim.corpora.Dictionary.load('dictionary.gensim')
 corpus = pickle.load(open('bow_corpus.pkl', 'rb'))
 lda25 = gensim.models.ldamodel.LdaModel.load('model25BOW.gensim')
@@ -68,8 +69,8 @@ def dist_vec(a):
   return t
 
 def sim(source_par, target_par):
-  dst = distance.cosine(topic_model(source_par), topic_model(target_par))
-  return dst
+  cos_sim = dot(topic_model(source_par), topic_model(target_par))/(norm(topic_model(source_par))*norm(topic_model(target_par)))
+  return cos_sim
 
 """**EXPLANATIONS**"""
 
