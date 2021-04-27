@@ -5,3 +5,8 @@ Include/
 pyvenv.cfg
 .idea/
 *.pkl
+*/__pycache__/
+models/TopicModel/model25BOW.gensim.state
+models/TopicModel/bow_corpus.pkl
+dataset/dataframe_of_sentences_2000.pkl
+*.pyc

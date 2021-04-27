@@ -10,9 +10,9 @@ Original file is located at
 import pickle
 import gensim
 from scipy.spatial import distance
-dictionary = gensim.corpora.Dictionary.load('dictionary.gensim')
-corpus = pickle.load(open('bow_corpus.pkl', 'rb'))
-lda25 = gensim.models.ldamodel.LdaModel.load('model25BOW.gensim')
+dictionary = gensim.corpora.Dictionary.load('../models/TopicModel/dictionary.gensim')
+corpus = pickle.load(open('../models/TopicModel/bow_corpus.pkl', 'rb'))
+lda25 = gensim.models.ldamodel.LdaModel.load('../models/TopicModel/model25BOW.gensim')
 
 import gensim
 from gensim.utils import simple_preprocess

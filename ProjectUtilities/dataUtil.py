@@ -4,6 +4,7 @@ import numpy as np
 from numpy.linalg import norm
 from functools import reduce
 import decimal
+import models.TopicModel.tpm as tpm
 
 
 class DataReader:
@@ -43,13 +44,15 @@ def load_dataset():
     return reader.getSentences()
 
 
-def get_paper_df_by_id(doi, paragraph_id = None):
+def get_paper_df_by_id(doi, paragraph_id=None):
     paper_id = doi.split('v')[0]
     df_all = load_dataset()
     df_paper = df_all[df_all['paperId'] == paper_id].sort_values(['paragraph', 'sentence_id']).copy()
 
+    print(df_paper.head())
     if paragraph_id is not None:
-        df_paper = df_paper[df_paper['paragraph'] == paragraph_id].copy()
+        # print(paragraph_id)
+        df_paper = df_paper[df_paper['paragraph'] == int(paragraph_id)].copy()
     return df_paper
 
 
@@ -80,14 +83,25 @@ def get_compare(source, target):
     return results
 
 
+def get_compare_by_paragraph(source, target, source_paragraph_id):
+    target_paper_df = get_paper_df_by_id(target)
+    return get_similarity_values_for_paragraph(source, target_paper_df, source_paragraph_id)
+
+
 def get_similarity_values_for_paragraph(source, target_paper_df, paragraph_id):
     source_paragraph_df = get_paper_df_by_id(source, paragraph_id)
+
+    if source_paragraph_df['paragraph'].count() == 0:
+        return {'empty': True}
+
+    source_paragraph = source_paragraph_df.groupby('paragraph')['sentence'].apply(lambda tags: ','.join(tags)).values[0]
 
     _r = []
 
     unique_target_paragraphs = target_paper_df.paragraph.unique()
     for target_paragraph_id in unique_target_paragraphs:
         target_paragraph_df = target_paper_df[target_paper_df['paragraph'] == target_paragraph_id]
+        target_paragraph = target_paragraph_df.groupby('paragraph')['sentence'].apply(lambda tags: ','.join(tags)).values[0]
 
         source_unique_sentences = source_paragraph_df.sentence_id.unique()
         max_values = []
@@ -100,11 +114,17 @@ def get_similarity_values_for_paragraph(source, target_paper_df, paragraph_id):
             # avg_value_for_sentence = sum(target_paragraph_df.sim.values)/len(target_paragraph_df.sim.values)
             max_values.append(max_value_for_sentence)
         number_above_threshold = [x for x in max_values if x > 0.4]
+
+        print(max_values)
         avg_sim_score_for_paragraph = reduce(lambda x, y: x + y, max_values) / len(max_values)
+        topic_model_sim = tpm.sim(source_paragraph, target_paragraph)
         _r.append({
-            'avg_max_score': decimal.Decimal(str(avg_sim_score_for_paragraph))
+            'avg_max_score': decimal.Decimal(str(avg_sim_score_for_paragraph)),
+            'topic_model_sim': topic_model_sim
         })
     return _r
+
+
 
 
 if __name__ == "__main__":
@@ -117,7 +137,10 @@ if __name__ == "__main__":
     df_paper_test = get_paper_by_id(test_paper)
     assert df_paper_test.sentence.count() > 0, "No data in paper dataframe"
 
-    results = get_compare(test_paper, test_paper2)
-    print(len(results))
+    #results = get_compare(test_paper, test_paper2)
+    #print(len(results))
 
+    source_paragraph_df = get_paper_df_by_id(test_paper2, "1")
+    source_paragraph = source_paragraph_df.groupby('paragraph')['sentence'].apply(lambda tags: ','.join(tags)).values
+    print(source_paragraph)
 

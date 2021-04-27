@@ -46,6 +46,33 @@ def compare(request):
     return JsonResponse(r, status=200)
 
 
+def compare_by_paragraph2(request):
+    params = request.GET
+    try:
+        source = params['source']
+        target = params['target']
+        source_paragraph_id = params['source_paragraph_id']
+    except:
+        return JsonResponse({'status': 'false', 'message': "missing params"}, status=400)
+
+    with open('./api/temp2.json', 'r') as f:
+        r = json.load(f)
+    return JsonResponse(r, status=200)
+
+
+def compare_by_paragraph(request):
+    params = request.GET
+    try:
+        source = params['source']
+        target = params['target']
+        source_paragraph_id = params['source_paragraph_id']
+    except:
+        return JsonResponse({'status': 'false', 'message': "missing params"}, status=400)
+
+    results = dataUtil.get_compare_by_paragraph(source, target, source_paragraph_id)
+
+    return JsonResponse({'results': results}, status=200)
+
 def dataframe_to_json_response(_df):
     json_string = _df.to_json(orient='records')
     parsed = json.loads(json_string)
