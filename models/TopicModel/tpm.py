@@ -13,7 +13,8 @@ from scipy.spatial import distance
 dictionary = gensim.corpora.Dictionary.load('../models/TopicModel/dictionary.gensim')
 corpus = pickle.load(open('../models/TopicModel/bow_corpus.pkl', 'rb'))
 lda25 = gensim.models.ldamodel.LdaModel.load('../models/TopicModel/model25BOW.gensim')
-
+from numpy import dot
+from numpy.linalg import norm
 import gensim
 from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
@@ -68,8 +69,8 @@ def dist_vec(a):
   return t
 
 def sim(source_par, target_par):
-  dst = distance.cosine(topic_model(source_par), topic_model(target_par))
-  return dst
+  cos_sim = dot(topic_model(source_par), topic_model(target_par))/(norm(topic_model(source_par))*norm(topic_model(target_par)))
+  return cos_sim
 
 """**EXPLANATIONS**"""
 
