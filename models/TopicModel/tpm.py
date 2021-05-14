@@ -145,7 +145,7 @@ def explanations(source_par, target_par):
   par1 = label_topics(par1)
   par2 = label_topics(par2)
   ans = []
-  exp = i
+  exp = ''
   for i in par1:
     for j in par2:
       if i[0] == j[0] and i[1] > 0.39 and j[1] > 0.39:
