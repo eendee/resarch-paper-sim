@@ -145,6 +145,7 @@ def explanations(source_par, target_par):
   par1 = label_topics(par1)
   par2 = label_topics(par2)
   ans = []
+  exp = ''
   for i in par1:
     for j in par2:
       if i[0] == j[0] and i[1] > 0.39 and j[1] > 0.39:
@@ -163,22 +164,26 @@ def explanations(source_par, target_par):
   sorted_list = sorted(a)
   for i in sorted_list:
     if i.startswith("Likely"):
+      exp = i
       # print(i)
       break
     elif i.startswith("Might be similar"):
+      exp = i
       # print(i)
       break
     elif i.startswith("The paragraphs"):
+      exp = i
       # print(i)
       break
     elif i.startswith("Very likely"):
+      exp = i
       # print(i)
       break
     # else:
     #   print("Very likely ")
     # break
   
-  return print(i)
+  return print(exp)
 
 """**TEST**"""
 
