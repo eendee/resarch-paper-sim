@@ -83,8 +83,8 @@ def get_compare(source, target):
     return results
 
 
-def get_compare_by_paragraph(source, target, source_paragraph_id):
-    target_paper_df = get_paper_df_by_id(target)
+def get_compare_by_paragraph(source, target, source_paragraph_id, target_paragraph_id=None):
+    target_paper_df = get_paper_df_by_id(target, target_paragraph_id)
     return get_similarity_values_for_paragraph(source, target_paper_df, source_paragraph_id)
 
 
@@ -103,27 +103,57 @@ def get_similarity_values_for_paragraph(source, target_paper_df, paragraph_id):
         target_paragraph_df = target_paper_df[target_paper_df['paragraph'] == target_paragraph_id]
         target_paragraph = target_paragraph_df.groupby('paragraph')['sentence'].apply(lambda tags: ','.join(tags)).values[0]
 
-        source_unique_sentences = source_paragraph_df.sentence_id.unique()
-        max_values = []
-        for source_sentence_id in source_unique_sentences:
-            source_sentence_df = source_paragraph_df[source_paragraph_df['sentence_id'] == source_sentence_id]
-            source_vector = source_sentence_df.iloc[0].vector
-            # col = 'sim' + str(target_paragraph_id) + '_' + str(source_sentence_id)
-            target_paragraph_df['sim'] = target_paragraph_df.vector.apply(get_similarity, args=[source_vector])
-            max_value_for_sentence = target_paragraph_df.sort_values(by='sim', ascending=False).iloc[0]['sim']
-            # avg_value_for_sentence = sum(target_paragraph_df.sim.values)/len(target_paragraph_df.sim.values)
-            max_values.append(max_value_for_sentence)
-        number_above_threshold = [x for x in max_values if x > 0.4]
-
-        print(max_values)
-        avg_sim_score_for_paragraph = reduce(lambda x, y: x + y, max_values) / len(max_values)
         topic_model_sim = tpm.sim(source_paragraph, target_paragraph)
+        doc2vec_vals = compute_doc2vec_paragrpah_sim(source_paragraph_df, target_paragraph_df)
+        doc2vec_exp = get_doc2vec_explanation(doc2vec_vals)
         _r.append({
-            'avg_max_score': decimal.Decimal(str(avg_sim_score_for_paragraph)),
+            'doc2vec_sim':{
+                'avg_max_score':decimal.Decimal(str(doc2vec_vals[0])),
+                'matches': doc2vec_vals[1],
+                'count': doc2vec_vals[2],
+                'explanation': doc2vec_exp
+            },
             'topic_model_sim': topic_model_sim
         })
     return _r
 
+
+def compute_doc2vec_paragrpah_sim(source_paragraph_df, target_paragraph_df):
+    source_unique_sentences = source_paragraph_df.sentence_id.unique()
+    max_values = []
+    for source_sentence_id in source_unique_sentences:
+        source_sentence_df = source_paragraph_df[source_paragraph_df['sentence_id'] == source_sentence_id]
+        source_vector = source_sentence_df.iloc[0].vector
+        # col = 'sim' + str(target_paragraph_id) + '_' + str(source_sentence_id)
+        target_paragraph_df['sim'] = target_paragraph_df.vector.apply(get_similarity, args=[source_vector])
+        max_value_for_sentence = target_paragraph_df.sort_values(by='sim', ascending=False).iloc[0]['sim']
+        # avg_value_for_sentence = sum(target_paragraph_df.sim.values)/len(target_paragraph_df.sim.values)
+        max_values.append(max_value_for_sentence)
+    number_above_threshold = [x for x in max_values if x > 0.4]
+    avg_sim_score_for_paragraph = reduce(lambda x, y: x + y, max_values) / len(max_values)
+
+    return avg_sim_score_for_paragraph, len(number_above_threshold), len(max_values)
+
+
+def get_doc2vec_explanation(doc2vec_vals):
+
+    score = round(doc2vec_vals[0], 2)
+    number_entailed = doc2vec_vals[1]
+    total_count = doc2vec_vals[2]
+
+    exp1 = 'The source and target paragraph vectors ' \
+           'have an average similarity of ' + str(score * 100) + "%"
+
+    exp2 = ''
+    if number_entailed == total_count:
+        exp2 = 'The source paragraph are completely entailed in the target'
+    elif number_entailed == 0:
+        exp2 = 'The source paragraph does not seem to semantically entail the target paragraphs'
+    else:
+        exp2 = 'Source paragraph semantically entails ' + str(number_entailed) + ' out of '\
+               + str(total_count) + ' sentences in the target paragraph'
+
+    return [exp1, exp2]
 
 
 
