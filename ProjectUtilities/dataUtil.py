@@ -104,16 +104,21 @@ def get_similarity_values_for_paragraph(source, target_paper_df, paragraph_id):
         target_paragraph = target_paragraph_df.groupby('paragraph')['sentence'].apply(lambda tags: ','.join(tags)).values[0]
 
         topic_model_sim = tpm.sim(source_paragraph, target_paragraph)
+        topic_model_explanation = tpm.explanations(source_paragraph, target_paragraph)
+
         doc2vec_vals = compute_doc2vec_paragrpah_sim(source_paragraph_df, target_paragraph_df)
         doc2vec_exp = get_doc2vec_explanation(doc2vec_vals)
         _r.append({
             'doc2vec_sim':{
-                'avg_max_score':decimal.Decimal(str(doc2vec_vals[0])),
+                'score':decimal.Decimal(str(doc2vec_vals[0])),
                 'matches': doc2vec_vals[1],
                 'count': doc2vec_vals[2],
                 'explanation': doc2vec_exp
             },
-            'topic_model_sim': topic_model_sim
+            'topic_model_sim': {
+                'score':topic_model_sim,
+                'explanation': topic_model_explanation
+            }
         })
     return _r
 
@@ -146,7 +151,7 @@ def get_doc2vec_explanation(doc2vec_vals):
 
     exp2 = ''
     if number_entailed == total_count:
-        exp2 = 'The source paragraph are completely entailed in the target'
+        exp2 = 'The source paragraph is completely entailed in the target'
     elif number_entailed == 0:
         exp2 = 'The source paragraph does not seem to semantically entail the target paragraphs'
     else:
