@@ -83,25 +83,25 @@ def list_converter(old_list):
 def label_topics(hu):
   for i in hu:
     if i[0] == 0:
-      i[0] = "Neural Network"
+      i[0] = "Neural Networks"
     if i[0] == 1:
       i[0] = "Matrix Decomposition"
     if i[0] == 2:
-      i[0] = "Conditional Probability / Markov Models"
+      i[0] = "Probabilistic Models"
     if i[0] == 3:
       i[0] = "Model Performance Evaluation"
     if i[0] == 4:
-      i[0] = "TBA"
+      i[0] = "Distance Measures"
     if i[0] == 5:
-      i[0] = "TBA"
+      i[0] = "Hyper-Paraneter Tuning"
     if i[0] == 6:
-      i[0] = "TBA"
+      i[0] = "Problem Statement / Research Topic"
     if i[0] == 7:
-      i[0] = "TBA"
+      i[0] = "Concept / Experiment Set-up"
     if i[0] == 8:
       i[0] = "Kernel / Loss Functions"
     if i[0] == 9:
-      i[0] = "Optimal Solution / Objective Functions"
+      i[0] = "Objective Functions"
     if i[0] == 10:
       i[0] = "Topic Modelling"
     if i[0] == 11:
@@ -109,17 +109,17 @@ def label_topics(hu):
     if i[0] == 12:
       i[0] = "Image Processing"
     if i[0] == 13:
-      i[0] = "TBA"
+      i[0] = "Theorems and Proofs"
     if i[0] == 14:
-      i[0] = "Reinforcement Learning"
+      i[0] = "Game Theory"
     if i[0] == 15:
-      i[0] = "Supervised Learning (Classification / Logistic Regression)"
+      i[0] = "Classification"
     if i[0] == 16:
       i[0] = "Computer Vision"
     if i[0] == 17:
       i[0] = "Clustering"
     if i[0] == 18:
-      i[0] = "TBA"
+      i[0] = "Exploratory Data Analysis"
     if i[0] == 19:
       i[0] = "Gradient Descent"
     if i[0] == 20:
@@ -127,9 +127,9 @@ def label_topics(hu):
     if i[0] == 21:
       i[0] = "Statistical Estimation"
     if i[0] == 22:
-      i[0] = "Bayesian(Probabilistic) Models"
+      i[0] = "Generative Models"
     if i[0] == 23:
-      i[0] = "Recommender Systems / Reinforcement Learning"
+      i[0] = "Reinforcement Learning"
     if i[0] == 24:
       i[0] = "Decision Trees / Ensemble Learning"
     
@@ -163,19 +163,22 @@ def explanations(source_par, target_par):
   sorted_list = sorted(a)
   for i in sorted_list:
     if i.startswith("Likely"):
-      print(i)
+      # print(i)
       break
     elif i.startswith("Might be similar"):
-      print(i)
+      # print(i)
       break
     elif i.startswith("The paragraphs"):
-      print(i)
+      # print(i)
       break
-    else:
-      print("Very likely ")
-    break
+    elif i.startswith("Very likely"):
+      # print(i)
+      break
+    # else:
+    #   print("Very likely ")
+    # break
   
-  # return ans
+  return print(i)
 
 """**TEST**"""
 
