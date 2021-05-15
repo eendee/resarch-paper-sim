@@ -146,42 +146,46 @@ def explanations(source_par, target_par):
   par2 = label_topics(par2)
   ans = []
   exp = ''
-  for i in par1:
-    for j in par2:
-      if i[0] == j[0] and i[1] > 0.39 and j[1] > 0.39:
-        ans.append("Likely to be Similar because they share topic \"" + str(i[0] + "\" in significant percentages"))
+  if bow_vector1 == bow_vector2:
+    exp = 'The two paragraphs are exactly the same'
+    return exp
+  else:
+    for i in par1:
+      for j in par2:
+        if i[0] == j[0] and i[1] > 0.39 and j[1] > 0.39:
+          ans.append("Likely to be Similar because they share topic \"" + str(i[0] + "\" in significant percentages"))
+          break
+        elif (i[0] == j[0] and i[1] > 0.39 and j[1] > 0.19 and j[1] < 0.39) or (i[0] == j[0] and j[1] > 0.39 and i[1] > 0.19 and j[1] < 0.39):
+          ans.append("Might be similar as they share common topic \"" + i[0] + "\" albeit in different percentages ")
+          break
+        elif i[0] == j[0] and i[1] < 0.18 and j[1] < 0.18:
+          ans.append("The paragraphs are likely to be dissimilar but they share small probabilities on \"" + str(i[0]) + "\" topic")
+          break
+        else:
+          ans.append("Very likely to be dissimilar as they share no common topic")
+    myset = set(ans)
+    a = list(myset)
+    sorted_list = sorted(a)
+    for i in sorted_list:
+      if i.startswith("Likely"):
+        exp = i
+        # print(i)
         break
-      elif (i[0] == j[0] and i[1] > 0.39 and j[1] > 0.19 and j[1] < 0.39) or (i[0] == j[0] and j[1] > 0.39 and i[1] > 0.19 and j[1] < 0.39):
-        ans.append("Might be similar as they share common topic \"" + i[0] + "\" albeit in different percentages ")
+      elif i.startswith("Might be similar"):
+        exp = i
+        # print(i)
         break
-      elif i[0] == j[0] and i[1] < 0.18 and j[1] < 0.18:
-        ans.append("The paragraphs are likely to be dissimilar but they share small probabilities on \"" + str(i[0]) + "\" topic")
+      elif i.startswith("The paragraphs"):
+        exp = i
+        # print(i)
         break
-      else:
-        ans.append("Very likely to be dissimilar as they share no common topic")
-  myset = set(ans)
-  a = list(myset)
-  sorted_list = sorted(a)
-  for i in sorted_list:
-    if i.startswith("Likely"):
-      exp = i
-      # print(i)
-      break
-    elif i.startswith("Might be similar"):
-      exp = i
-      # print(i)
-      break
-    elif i.startswith("The paragraphs"):
-      exp = i
-      # print(i)
-      break
-    elif i.startswith("Very likely"):
-      exp = i
-      # print(i)
-      break
-    # else:
-    #   print("Very likely ")
-    # break
+      elif i.startswith("Very likely"):
+        exp = i
+        # print(i)
+        break
+      # else:
+      #   print("Very likely ")
+      # break
   
   return print(exp)
 
@@ -223,7 +227,7 @@ filter all this information to the user. Nowadays, the most successful recommend
 such as: movies, music, or books.'
 
 a = explanations(unseen_document, unseen_document3)
-a
+print(a)
 
 b = sim(unseen_document, unseen_document3)
-b
+print(b)
