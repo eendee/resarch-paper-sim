@@ -6,7 +6,7 @@ from nltk.tokenize import sent_tokenize
 
 ##############################################################################
 #
-# Load the stored model and evaluate its performance on STS benchmark dataset
+# Load the stored model and run inferencing
 #
 ##############################################################################
 
