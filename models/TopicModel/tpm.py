@@ -187,7 +187,7 @@ def explanations(source_par, target_par):
       #   print("Very likely ")
       # break
   
-  return print(exp)
+  return exp
 
 """**TEST**"""
 
