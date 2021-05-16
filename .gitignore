@@ -11,3 +11,5 @@ models/TopicModel/bow_corpus.pkl
 dataset/dataframe_of_sentences_2000.pkl
 *.pyc
 *__pycache__/
+models/TopicModel/myenv
+models/venv
