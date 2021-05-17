@@ -6,6 +6,7 @@ from functools import reduce
 import decimal
 import models.TopicModel.tpm as tpm
 import models.SyntacticFeatures.syntacticfeatures as sf
+import bert.test_model as bert
 
 
 class DataReader:
@@ -111,6 +112,7 @@ def get_similarity_values_for_paragraph(source, target_paper_df, paragraph_id):
         doc2vec_exp = get_doc2vec_explanation(doc2vec_vals)
 
         co_occurrence_score = sf.jaccard_similarity(source_paragraph, target_paragraph)
+
         _r.append({
             'doc2vec_sim':{
                 'score':decimal.Decimal(str(doc2vec_vals[0])),
@@ -124,6 +126,9 @@ def get_similarity_values_for_paragraph(source, target_paper_df, paragraph_id):
             },
             'syntactic_sim':{
                 'score':co_occurrence_score
+            },
+            'bert_sim': {
+                'score': co_occurrence_score
             }
         })
     return _r
