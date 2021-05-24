@@ -119,6 +119,20 @@ def jaccard_similarity(source_par, target_par):
     # s2 = set(B)
     return float(len(s1.intersection(s4)) / len(s3.union(s4)))
 
+def jac_exp(source_par, target_par):
+    A = ssyn(source_par)
+    B = ssyn(target_par)
+    s1 = A
+    s2 = B
+    C = preprocess_stem(source_par)
+    D = preprocess_stem(target_par)
+    s3 = set(C)
+    s4 = set(D)
+    inter = s1.intersection(s4)
+    # s1 = set(A)
+    # s2 = set(B)
+    return "Both paragraphs share tokens " +  str(len(s1.intersection(s4))) + " which are " + str(inter) + " out of a total of " + str(len(s3.union(s4))) + " tokens in both paragraphs"
+
 jaccard_similarity(unseen_document, unseen_document)
 
 """SENTENCE COMPLEXITY"""
