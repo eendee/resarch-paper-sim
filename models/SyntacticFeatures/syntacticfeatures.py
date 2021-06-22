@@ -191,16 +191,16 @@ def ttr(source_par, target_par):
   # TTR_A = (len(types_A)/len(A))*100
   # TTR_B = (len(types_B)/len(B))*100
   if A >= 80:
-    print("Lexical Richness score of the source paragraph is high")
+    print("The SOURCE paragraph is has a very rich vocabulary")
   elif A >= 60 and A < 80:
-    print("Lexical richness score of the source paragraph is average")
+    print("The vocabulary richness of the SOURCE paragraph is about average")
   else:
-    print("Lexical richness score of the source paragraph is low")
+    print("The SOURCE paragraph has a poor vocabulary richness")
   if B >= 80:
-    print("Lexical Richness score of the target paragraph is high")
+    print("The TARGET paragraph is has a very rich vocabulary")
   elif B >= 60 and B < 80:
-    print("Lexical richness score of the target paragraph is average")
+    print("The vocabulary richness of the TARGET paragraph is about average")
   else:
-    print("Lexical richness score of the target paragraph is low")
+    print("The TARGET paragraph has a poor vocabulary richness")
 
 ttr(unseen_document, unseen_document3)
