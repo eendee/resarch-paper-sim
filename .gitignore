@@ -13,5 +13,5 @@ dataset/dataframe_of_sentences_2000.pkl
 *__pycache__/
 models/TopicModel/myenv
 models/venv
-
+/dataset
 **/*.pyc
