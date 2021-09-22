@@ -19,7 +19,7 @@ class DataReader:
         if self._df_meta is None:
             with open('../dataset/corpus_meta.pkl', 'rb') as f:
                 self._df_meta = pickle.load(f)
-        return self._df_meta
+        return self._df_meta[self._df_meta.id.isin(filtered_list)]
 
 
     def getSentences(self):
@@ -39,6 +39,21 @@ class DataReader:
 reader = DataReader()
 decimal.getcontext().prec = 4
 
+filtered_list = ['1506.03662v4',
+'1504.04406v1',
+'1509.01240v2',
+'1512.02970v3',
+'1601.01892v2',
+'1507.03194v2',
+'1507.06452v1',
+'1407.2806v1',
+'1606.07792v1',
+'1301.4168v2',
+'1410.6466v2',
+'1306.0604v3',
+'1304.6478v1',
+'1411.0591v1',
+'1407.8187v1']
 
 def get_similarity(vector1, vector2):
     cos_sim = np.dot(vector1, vector2) / (norm(vector1) * norm(vector2))
