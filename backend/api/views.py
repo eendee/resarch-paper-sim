@@ -2,6 +2,7 @@
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.http import JsonResponse
 from ProjectUtilities import dataUtil
+from datetime import datetime
 import json
 
 
@@ -65,10 +66,13 @@ def compare_by_paragraph(request):
     try:
         source = params['source']
         target = params['target']
+        unique_id = params['uid']
         source_paragraph_id = params['source_paragraph_id']
     except:
         return JsonResponse({'status': 'false', 'message': "missing params"}, status=400)
 
+    # log count
+    write_to_log(unique_id, source, target)
     results = dataUtil.get_compare_by_paragraph(source, target, source_paragraph_id)
 
     return JsonResponse({'results': results}, status=200)
@@ -80,3 +84,10 @@ def dataframe_to_json_response(_df):
         'dataset': parsed
     })
     return response
+
+
+def write_to_log(unique_id, source_id, target_id):
+    row = f"{unique_id}, {source_id}, {target_id}, {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n"
+    f = open("log.txt", "a")
+    f.writelines(row)
+    f.close()
