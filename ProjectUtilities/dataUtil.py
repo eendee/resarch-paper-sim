@@ -4,8 +4,12 @@ import numpy as np
 from numpy.linalg import norm
 from functools import reduce
 import decimal
-import models.TopicModel.tpm as tpm
-
+#import models.TopicModel.tpm as tpm
+import sys 
+sys.path.append('../../resarch-paper-sim/models/TopicModel')
+sys.path.append('../../resarch-paper-sim/models/SyntacticFeatures')
+#import tpm
+#import syntacticfeatures as sf
 
 class DataReader:
     def __init__(self):
