@@ -1,9 +1,11 @@
 # from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.http import JsonResponse
-from ProjectUtilities import dataUtil
+#from ProjectUtilities import dataUtil
 import json
-
+import sys
+sys.path.append('../../resarch-paper-sim/ProjectUtilities')
+import dataUtil
 
 def index(request):
     df = dataUtil.load_dataset_meta()
